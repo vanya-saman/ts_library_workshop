@@ -43,6 +43,11 @@ public class UtilsTest {
         assertThat(Utils.cleanAndUnLeet("1337")).isEqualTo("leet");
     }
 
+    @Test
+    void testStringWithAllLeetNumbers(){
+        assertThat(Utils.cleanAndUnLeet("01345678")).isEqualTo("oieasgtb");
+    }
+
     @ParameterizedTest
     @ValueSource(strings={
             "1337",
