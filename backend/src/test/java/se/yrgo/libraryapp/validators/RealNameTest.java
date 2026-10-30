@@ -1,6 +1,8 @@
 package se.yrgo.libraryapp.validators;
 import static org.assertj.core.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.List;
 
@@ -21,6 +23,21 @@ public class RealNameTest {
             assertThat(badWords.containsAll(List.of("malware", "worm", "null"))).isTrue();
         } catch (Exception e) {
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings={
+            "malware",
+            "worm",
+            "null",
+            "wonderful malware",
+            "worm virus",
+            "the malware destroys",
+            "I-love-malware",
+            "terrible;computer;worm"
+    })
+    void testValidatorRejectsBadWords(String badWord){
+        assertThat(RealName.validate(badWord)).isFalse();
     }
 
 }
