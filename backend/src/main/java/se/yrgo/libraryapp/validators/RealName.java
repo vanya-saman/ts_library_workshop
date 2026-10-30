@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,31 +23,36 @@ public final class RealName {
     private static final Set<String> invalidWords = new HashSet<>();
 
     static {
-        try (InputStream is = RealName.class.getClassLoader().getResourceAsStream("bad_words.txt");
-                BufferedReader reader =
-                        new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-            while (reader.readLine() != null) {
-                invalidWords.addAll(reader.lines().collect(Collectors.toSet()));
-            }
+        try{
+          invalidWords.addAll(loadBadWordsFile());
         } catch (IOException ex) {
             logger.error("Unable to initialize list of bad words", ex);
         }
     }
 
-    private RealName() {}
+    static Set<String> loadBadWordsFile() throws IOException{
+        try (InputStream is = RealName.class.getClassLoader().getResourceAsStream("bad_words.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+
+            return reader.lines().collect(Collectors.toSet());
+        }
+    }
+
+    private RealName() {
+    }
 
     /**
      * Validates if the given name is a valid and proper name.
-     * 
+     *
      * @param name the name to check
      * @return true if valid, false if not
-     * 
+     *
      */
     public static boolean validate(String name) {
-        String cleanName = Utils.cleanAndUnLeet(name);
-        String[] words = cleanName.split("\\W+");
-        for (int i = 1; i < words.length; i++) {
-            if (invalidWords.contains(words[i])) {
+        String[] words = name.split("\\W+");
+        for (String word : words) {
+            String cleanWord = Utils.cleanAndUnLeet(word);
+            if (invalidWords.contains(cleanWord)) {
                 return false;
             }
         }
