@@ -40,4 +40,9 @@ public class UsernameTest {
     void incorrectUsername(String username) {
         assertThat(Username.validate(username)).isFalse();
     }
+
+    @Test
+    void incorrectNullUsername(){
+        assertThat(Username.validate(null)).isFalse();
+    }
 }
