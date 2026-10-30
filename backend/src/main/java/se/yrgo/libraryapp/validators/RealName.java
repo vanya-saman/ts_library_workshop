@@ -31,16 +31,14 @@ public final class RealName {
 
     static Set<String> loadBadWordsFile() throws IOException{
         try (InputStream is = RealName.class.getClassLoader().getResourceAsStream("bad_words.txt");
-             BufferedReader reader =
-                     new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-            while (reader.readLine() != null) {
-                return reader.lines().collect(Collectors.toSet());
-            }
+             BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+
+            return reader.lines().collect(Collectors.toSet());
         }
-        throw new IOException("No lines loaded");
     }
 
-    private RealName() {}
+    private RealName() {
+    }
 
     /**
      * Validates if the given name is a valid and proper name.
