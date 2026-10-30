@@ -49,10 +49,10 @@ public final class RealName {
      *
      */
     public static boolean validate(String name) {
-        String cleanName = Utils.cleanAndUnLeet(name);
-        String[] words = cleanName.split("\\W+");
+        String[] words = name.split("\\W+");
         for (String word : words) {
-            if (invalidWords.contains(word)) {
+            String cleanWord = Utils.cleanAndUnLeet(word);
+            if (invalidWords.contains(cleanWord)) {
                 return false;
             }
         }
