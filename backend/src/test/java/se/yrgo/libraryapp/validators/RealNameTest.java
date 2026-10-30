@@ -34,10 +34,20 @@ public class RealNameTest {
             "worm virus",
             "the malware destroys",
             "I-love-malware",
-            "terrible;computer;worm"
+            "terrible;computer;worm",
     })
     void testValidatorRejectsBadWords(String badWord){
         assertThat(RealName.validate(badWord)).isFalse();
     }
 
+    @ParameterizedTest
+    @ValueSource(strings={
+            "w0rm",
+            "nu11",
+            "m41w4re",
+            "I 10v3 m4lw4r3"
+    })
+    void testValidatorRejectBadLeetWords(String badWord){
+        assertThat(RealName.validate(badWord)).isFalse();
+    }
 }
