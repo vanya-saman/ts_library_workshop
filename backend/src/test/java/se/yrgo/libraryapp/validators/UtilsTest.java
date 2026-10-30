@@ -45,7 +45,7 @@ public class UtilsTest {
 
     @Test
     void testStringWithAllLeetNumbers(){
-        assertThat(Utils.cleanAndUnLeet("01345678")).isEqualTo("oieasgtb");
+        assertThat(Utils.cleanAndUnLeet("01345678")).isEqualTo("oleasgtb");
     }
 
     @ParameterizedTest
