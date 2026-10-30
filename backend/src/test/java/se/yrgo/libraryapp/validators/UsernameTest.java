@@ -16,10 +16,13 @@ public class UsernameTest {
             "bosse",
             "CaptializedName",
             "-hello@",
-            "@.-0"
+            "@.-0",
+            "hej18",
+            "2356",
+            "43537"
     })
-    void correctUsername() {
-        assertThat(Username.validate("bosse")).isTrue();
+    void correctUsername(String username) {
+        assertThat(Username.validate(username)).isTrue();
     }
 
     @ParameterizedTest
@@ -30,9 +33,8 @@ public class UsernameTest {
             "emoji☺️",
             "/admin",
             "rm -rf /",
-            "9523",
             "ascfeaef€¥3",
-            "avf_45",
+            "avf_45?",
             "日本語おｋですか",
             "hello\n"
     })
