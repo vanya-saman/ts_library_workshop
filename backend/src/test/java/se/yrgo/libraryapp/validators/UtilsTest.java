@@ -2,36 +2,28 @@ package se.yrgo.libraryapp.validators;
 
 import static org.assertj.core.api.Assertions.*;
 
+import net.jqwik.api.ForAll;
+import net.jqwik.api.constraints.AlphaChars;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EmptySource;
+import net.jqwik.api.Property;
 import org.junit.jupiter.params.provider.ValueSource;
-
 import java.util.regex.Pattern;
 
 public class UtilsTest {
 
-    private static final Pattern LOWERCASE_EMPTY_AND_WHITESPACE = Pattern.compile("[a-z ]+|");
+    private static final Pattern LOWERCASE_EMPTY_AND_WHITESPACE = Pattern.compile("[a-z ]?+");
 
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "ALLCAPS",
-            "someCaps",
-            "endcaP",
-            "Startcap",
-            "CaPs And Spcaes",
-            "Some@Special¥Stuff",
-            "£$€{¥€{",
-            "hello@mail.com",
-            "££hello"
-    })
-    @EmptySource
-    void testLettersAndWhiteSpaceLowercase(String str) {
-        assertThat(
-                LOWERCASE_EMPTY_AND_WHITESPACE.matcher(Utils.onlyLettersAndWhitespace(str)).matches()
-        ).isTrue();
+    @Property
+    boolean lettersAndWhiteSpaceLowercase(@ForAll String str) {
+        System.out.println("|"+str+"| -> |"+Utils.onlyLettersAndWhitespace(str)+"|");
+        for (char c : Utils.onlyLettersAndWhitespace(str).toCharArray()){
+            if(!Character.isWhitespace(c) && !Character.isLetter(c)){
+                return false;
+            }
+        }
+        return true;
     }
-
 
     @Test
     void testUnleetWonderful(){
