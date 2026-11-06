@@ -76,4 +76,11 @@ public class UserDaoTest {
         UserDao userDao = new UserDao(ds);
         assertThat(userDao.get(username)).isEmpty();
     }
+
+    @Test
+    void getUserWhenDatabaseFails() throws SQLException {
+        when(ds.getConnection()).thenThrow(new SQLException("down"));
+        UserDao userDao = new UserDao(ds);
+        assertThat(userDao.get("1")).isEmpty();
+    }
 }
