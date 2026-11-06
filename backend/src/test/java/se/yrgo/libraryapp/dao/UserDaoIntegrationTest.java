@@ -32,4 +32,26 @@ public class UserDaoIntegrationTest {
         assertThat(maybeUser.get().getName()).isEqualTo(username);
         assertThat(maybeUser.get().getId()).isEqualTo(userId);
     }
+
+    @Test
+    void getNonExistingUserById() {
+        UserDao userDao = new UserDao(ds);
+        assertThat(userDao.get("9999")).isEmpty();
+    }
+
+    @Test
+    void getUserByLettersId() {
+        UserDao userDao = new UserDao(ds);
+        assertThat(userDao.get("ASDCS")).isEmpty();
+    }
+
+    @Test
+    void nameIsNoLongerAvailableAfterRegistering() {
+        UserDao userDao = new UserDao(ds);
+        assertThat(userDao.isNameAvailable("newuser")).isTrue();
+        userDao.register("newuser", "New User", "hash123");
+        assertThat(userDao.isNameAvailable("newuser")).isFalse();
+    }
+
+
 }
