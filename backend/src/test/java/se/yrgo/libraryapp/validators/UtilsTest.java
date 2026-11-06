@@ -16,7 +16,6 @@ public class UtilsTest {
 
     @Property
     boolean lettersAndWhiteSpaceLowercase(@ForAll String str) {
-        System.out.println("|"+str+"| -> |"+Utils.onlyLettersAndWhitespace(str)+"|");
         for (char c : Utils.onlyLettersAndWhitespace(str).toCharArray()){
             if(!Character.isWhitespace(c) && !Character.isLetter(c)){
                 return false;
