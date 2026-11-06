@@ -1,6 +1,9 @@
 package se.yrgo.libraryapp.services;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
@@ -34,5 +37,38 @@ public class UserServiceTest {
         UserService userService = new UserService(userDao, encoder);
         assertThat(userService.validate(username,
                 password)).isEqualTo(Optional.of(id));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "ab",
+            "    da ",
+            "      ",
+            "ö"
+    })
+    @NullSource
+    void isNameAvailableInvalidNames(String name){
+        final PasswordEncoder encoder =
+                org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+        UserService userService = new UserService(userDao, encoder);
+
+        assertThat(userService.isNameAvailable(name)).isFalse();
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "Göran",
+            "Mark",
+            "Toole",
+            "Steven",
+            "April O' Neil"
+    })
+    void isNameAvailableValidNames(String name){
+        final PasswordEncoder encoder =
+                org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+        UserService userService = new UserService(userDao, encoder);
+        when(userDao.isNameAvailable(name)).thenReturn(true);
+
+        assertThat(userService.isNameAvailable(name)).isTrue();
     }
 }
