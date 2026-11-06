@@ -1,5 +1,7 @@
 package se.yrgo.libraryapp.services;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 import javax.inject.Inject;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -30,5 +32,13 @@ public class UserService {
         }
 
         return Optional.of(loginInfo.getUserId());
-    }        
+    }
+
+    public boolean register(String name, String realname, String password) {
+        String passwordHash = encoder.encode(password);
+        // handle names like Ian O'Toole
+        realname = realname.replace("'", "\\'");
+        return userDao.register(name, realname, passwordHash);
+    }
+
 }
