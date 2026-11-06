@@ -26,6 +26,7 @@ import se.yrgo.libraryapp.entities.Role;
  */
 public class App extends Jooby {
   public App() {
+    install(new GuiceModule(new AppModule()));
     install(new GracefulShutdown());
     install(new GuiceModule()); // dependency injection
     install(new HikariModule()); // database connections
