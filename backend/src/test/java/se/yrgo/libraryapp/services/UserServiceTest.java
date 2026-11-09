@@ -15,6 +15,7 @@ import se.yrgo.libraryapp.entities.UserId;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @MockitoSettings(strictness = Strictness.STRICT_STUBS)
@@ -48,8 +49,7 @@ public class UserServiceTest {
     })
     @NullSource
     void isNameAvailableInvalidNames(String name){
-        final PasswordEncoder encoder =
-                org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
         UserService userService = new UserService(userDao, encoder);
 
         assertThat(userService.isNameAvailable(name)).isFalse();
@@ -64,11 +64,22 @@ public class UserServiceTest {
             "April O' Neil"
     })
     void isNameAvailableValidNames(String name){
-        final PasswordEncoder encoder =
-                org.springframework.security.crypto.password.NoOpPasswordEncoder.getInstance();
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+
         UserService userService = new UserService(userDao, encoder);
         when(userDao.isNameAvailable(name)).thenReturn(true);
 
         assertThat(userService.isNameAvailable(name)).isTrue();
+    }
+
+    @Test
+    void registerSuccess() {
+        PasswordEncoder encoder = mock(PasswordEncoder.class);
+        UserService userService = new UserService(userDao, encoder);
+
+        when(encoder.encode("password")).thenReturn("hashed");
+        when(userDao.register("testuser", "Bosse", "hashed")).thenReturn(true);
+
+        assertThat(userService.register("testuser", "Bosse", "password")).isTrue();
     }
 }
